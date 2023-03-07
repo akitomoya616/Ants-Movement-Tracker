@@ -5,14 +5,14 @@
 #include <QtWidgets>
 #include <random>
 #include <math.h>
-#include "ant.h"
+#include "cell.h"
 
 /**
   Creates a new Point object with coordinates x and y
   @param x int x coordinate
   @param y int y coordinate
 */
-Ant::Ant(QColor color, const int x, const int y, bool now, bool next) {
+Cell::Cell(QColor color, const int x, const int y, bool now, bool next) {
   this->color_ = color;
   x_ = x;
   y_ = y;
@@ -20,7 +20,7 @@ Ant::Ant(QColor color, const int x, const int y, bool now, bool next) {
   next_alive_=next;
 }
 
-void Ant::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button()==Qt::LeftButton){
         qDebug() << "left clicked!";
@@ -41,12 +41,12 @@ void Ant::mousePressEvent(QGraphicsSceneMouseEvent *event)
     update();
 }
 
-QRectF Ant::boundingRect() const
+QRectF Cell::boundingRect() const
 {
     return QRectF(x_, y_, width_, width_);
 }
 
-QPainterPath Ant::shape() const
+QPainterPath Cell::shape() const
 {
     QPainterPath path;
     path.addRect(x_, y_, width_, width_);
@@ -54,7 +54,7 @@ QPainterPath Ant::shape() const
 }
 
 
-void Ant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
     QBrush b = painter->brush();
@@ -64,7 +64,7 @@ void Ant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidg
 }
 
 //pre-set the condition for each ant while initializing the board
-int Ant::set_condition(){
+int Cell::set_condition(){
     //generate a value either 0 or 1
     int return_value=0;
     int random=rand()%2;
@@ -84,16 +84,16 @@ int Ant::set_condition(){
     return return_value;
 }
 
-bool Ant::now_alive(){
+bool Cell::now_alive(){
     return current_alive_;
 }
 
-void Ant::set_next(bool condition){
+void Cell::set_next(bool condition){
     next_alive_=condition;
 }
 
-void Ant::update_condition(){
-    //if the Ant was already alive, add to counter that counts
+void Cell::update_condition(){
+    //if the cell was already alive, add to counter that counts
     if(current_alive_&&next_alive_){
         stay_alive_++;
     }
@@ -104,7 +104,7 @@ void Ant::update_condition(){
     next_alive_=false;
     //also update the color
     if(current_alive_){
-        //if the ant has stayed alive for at least 3 turns, change it to orange
+        //if the cell has stayed alive for at least 3 turns, change it to orange
         if(stay_alive_>2){
             color_=QColor(255,128,0);
         }
@@ -126,6 +126,6 @@ void Ant::update_condition(){
   @param first Point left hand side of the expression
   @param other Point right hand side of the expression
 */
-bool operator==(const Ant &first, const Ant &other) {
+bool operator==(const Cell &first, const Cell &other) {
   return first.x_ == other.x_ && first.y_ == other.y_;
 }
