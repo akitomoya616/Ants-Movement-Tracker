@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTimer>
-#include "cell.h"
+#include "ant.h"
 #include "bar.h"
 #include <vector>
 QT_BEGIN_NAMESPACE
@@ -32,7 +32,7 @@ private:
 
     QGraphicsScene *scene2;
 
-    std::vector<std::vector<Cell*>> game_board;
+    std::vector<std::vector<Ant*>> game_board;
 
     std::vector<Bar*> bar_board;
 
