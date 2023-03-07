@@ -21,19 +21,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     // the QGraphicsView is the UI element that contains the
     // scene that we will actually get to draw on.
-    QGraphicsView * view = ui->graphicsView;
+    QGraphicsView * board = ui->boardView;
 
     // scene is a QGraphicsScene pointer field of the PlotWindow class
     // this makes our lives easier by letting us easily access it
     // from other functions in this class.
     scene = new QGraphicsScene;
-    view->setScene(scene);
+    board->setScene(scene);
     // make the scene the same size as the view containing it
-    view->setSceneRect(0,0,view->frameSize().width(),view->frameSize().height());
-
+    board->setSceneRect(0,0,board->frameSize().width(),board->frameSize().height());
 
     //set up view and scene for the bar
-    QGraphicsView * view2 = ui->graphicsView_2;
+    QGraphicsView * view2 = ui->statisticsView;
     scene2 = new QGraphicsScene;
     view2->setScene(scene2);
     view2->setSceneRect(0,0,view2->frameSize().width(),view2->frameSize().height());
@@ -57,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     //for initializing the bar_board
     for (int i=0;i<22;i++){
-        Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->graphicsView_2->height(),0);
+        Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->statisticsView->height(),0);
         bar_board.push_back(p1);
         scene2->addItem(bar_board[i]);
     }
@@ -74,10 +73,8 @@ MainWindow::~MainWindow()
 
 //print the current condition of the board
 void MainWindow::print_board() {
-
     //extra work for counting cells thta has survived for more than 2 turns
     int cell_alive=0;
-    //
 
     population_=0;
     total_=0;
@@ -115,7 +112,7 @@ void MainWindow::print_board() {
     //
 
     //now try to create the bar
-    int total_height=ui->graphicsView_2->height();
+    int total_height=ui->statisticsView->height();
     //the height for the bar depends on the percentage of the total height in this view
     double actual_height=total_height*percentage/100;
     //if the bar in the screen is not full, add bar to the next position
@@ -273,7 +270,7 @@ void MainWindow::on_ResetButton_pressed(){
     }
     //re-initialize the bar board
     for (int i=0;i<22;i++){
-        bar_board[i]->update_condition(0+i*20,ui->graphicsView_2->height(),0);
+        bar_board[i]->update_condition(0+i*20,ui->statisticsView->height(),0);
     }
     //re-start the counters
     bar_count=0;

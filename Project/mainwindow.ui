@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QGraphicsView" name="boardView">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -63,7 +63,7 @@
      <string>Pause</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView_2">
+   <widget class="QGraphicsView" name="statisticsView">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -190,7 +190,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
