@@ -31,11 +31,11 @@ MainWindow::MainWindow(QWidget *parent)
     // make the scene the same size as the view containing it
     board->setSceneRect(0,0,board->frameSize().width(),board->frameSize().height());
 
-    //set up view and scene for the bar
-    QGraphicsView * view2 = ui->statisticsView;
+    //set up view and scene for the statistics board
+    QGraphicsView * statisticsBoard = ui->statisticsView;
     scene2 = new QGraphicsScene;
-    view2->setScene(scene2);
-    view2->setSceneRect(0,0,view2->frameSize().width(),view2->frameSize().height());
+    statisticsBoard->setScene(scene2);
+    statisticsBoard->setSceneRect(0,0,statisticsBoard->frameSize().width(),statisticsBoard->frameSize().height());
 
     // we'll want to generate random numbers later so we're
     // going to seed our random number generator once
