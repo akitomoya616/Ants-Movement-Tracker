@@ -54,7 +54,7 @@ private:
 
     bool reset_=false;
 
-    double ms=500.0;
+    double ms_=500.0;
 
 private slots:
     void on_StepButton_pressed();

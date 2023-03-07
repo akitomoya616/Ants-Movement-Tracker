@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     for(int i=0;i<rows_;i++){
         game_board.push_back(std::vector<Cell*>()); //insert a row into the board
         for(int j=0;j<columns_;j++){
-            Cell *p1=new Cell(color1,90+20*j,40+20*i,true,true);
+            Cell *p1=new Cell(color1,90+20*j,40+20*i,true,true); //set the new cell with x and y coordinates
             //for each cell, set it to be either dead or alive
             current_alive+=p1->set_condition();
             game_board[i].push_back(p1); //add value to this new-inserted row vertically as column value on the same row
@@ -60,10 +60,12 @@ MainWindow::MainWindow(QWidget *parent)
     for (int i=0;i<22;i++){
         Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->statisticsView->height(),0);
         bar_board.push_back(p1);
-        staticScene->addItem(bar_board[i]);
+        staticScene->addItem(bar_board[i]); //addItem() will draw the cell for us on UI, which will finally call Bar::paint()
     }
 
+    //print the intialized board on the screen
     print_board();
+
     //initialize a timer, and connect the on_timer_fired slot with the timeout signal so everytime timeout emit, on_timer_fired will run once
     timer_ = new QTimer(this);
     connect(timer_, &QTimer::timeout, this, &MainWindow::OnTimerFired);
@@ -74,7 +76,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//print the current condition of the board
+//print the current condition of the board every time a turn is ended
 void MainWindow::print_board() {
     //extra work for counting cells thta has survived for more than 2 turns
     int cell_alive=0;
@@ -85,7 +87,7 @@ void MainWindow::print_board() {
         for (int j=0;j<game_board[i].size();j++){
             //for the first turn, put cells on UI
             if(turn_count==0 && !reset_){
-                boardScene->addItem(game_board[i][j]);
+                boardScene->addItem(game_board[i][j]); //addItem() will draw the cell for us on UI, which will finally call Cell::paint()
             }
 
             //count the total number of all cells and alived cells
@@ -97,8 +99,6 @@ void MainWindow::print_board() {
                 if(game_board[i][j]->get_alive()>2){
                     cell_alive++;
                 }
-                //
-
             }
         }
     }
@@ -113,12 +113,13 @@ void MainWindow::print_board() {
     double percentage_alive=cell_alive*1.0/total_*100.0;
     QString text3="Alive > 2: "+QString::number(cell_alive)+" ("+QString::number(percentage_alive)+"%)";
     ui->AliveBar->setText(text3);
-    //
 
     //now try to create the bar
     int total_height=ui->statisticsView->height();
+
     //the height for the bar depends on the percentage of the total height in this view
     double actual_height=total_height*percentage/100;
+
     //if the bar in the screen is not full, add bar to the next position
     if(bar_count<22){
         bar_board[bar_count]->update_condition(0+bar_count*20,total_height-actual_height,actual_height);
@@ -174,7 +175,7 @@ void MainWindow::play_once(){
             }
         }
     }
-    //update the board and turn/popluation/alive information
+    //update the board and turn/popluation/alive information after the current turn is over
     update_board();
     print_board();
 }
@@ -253,8 +254,7 @@ void MainWindow::OnTimerFired(){
 void MainWindow::on_PlayButton_pressed(){
     pause_=false;
     //timer returns a signal every 500ms, or to say 0.5s
-    //int ms=500;
-    timer_->start(ms);
+    timer_->start(ms_);
 }
 
 //once the pause button been pressed, stop the timer
@@ -290,9 +290,9 @@ void MainWindow::on_horizontalSlider_sliderReleased(){
     //transfer it into percentage type
     double speed_rate=ui->horizontalSlider->sliderPosition()*1.0/100;
     //and adjust ms value based on this rate
-    ms=500-500*speed_rate;
+    ms_=500-500*speed_rate;
     //update the ms value on screen as well
-    QString text="Current speed: "+QString::number(ms)+" ms/turn";
+    QString text="Current speed: "+QString::number(ms_)+" ms/turn";
     ui->CurrentSpeed->setText(text);
     //if the game is playing at present, re-activate the playbutton_pressed slot with the updated ms value
     if(!pause_){
