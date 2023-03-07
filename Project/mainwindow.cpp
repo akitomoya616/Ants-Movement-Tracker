@@ -26,15 +26,15 @@ MainWindow::MainWindow(QWidget *parent)
     // scene is a QGraphicsScene pointer field of the PlotWindow class
     // this makes our lives easier by letting us easily access it
     // from other functions in this class.
-    scene = new QGraphicsScene;
-    board->setScene(scene);
+    boardScene = new QGraphicsScene;
+    board->setScene(boardScene);
     // make the scene the same size as the view containing it
     board->setSceneRect(0,0,board->frameSize().width(),board->frameSize().height());
 
     //set up view and scene for the statistics board
     QGraphicsView * statisticsBoard = ui->statisticsView;
-    scene2 = new QGraphicsScene;
-    statisticsBoard->setScene(scene2);
+    staticScene = new QGraphicsScene;
+    statisticsBoard->setScene(staticScene);
     statisticsBoard->setSceneRect(0,0,statisticsBoard->frameSize().width(),statisticsBoard->frameSize().height());
 
     // we'll want to generate random numbers later so we're
@@ -47,20 +47,22 @@ MainWindow::MainWindow(QWidget *parent)
     //creat a 2d vector of cell
     int current_alive=0;
     for(int i=0;i<rows_;i++){
-        game_board.push_back(std::vector<Cell*>());
+        game_board.push_back(std::vector<Cell*>()); //insert a row into the board
         for(int j=0;j<columns_;j++){
             Cell *p1=new Cell(color1,90+20*j,40+20*i,true,true);
             //for each cell, set it to be either dead or alive
             current_alive+=p1->set_condition();
-            game_board[i].push_back(p1);
+            game_board[i].push_back(p1); //add value to this new-inserted row vertically as column value on the same row
         }
     }
+
     //for initializing the bar_board
     for (int i=0;i<22;i++){
         Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->statisticsView->height(),0);
         bar_board.push_back(p1);
-        scene2->addItem(bar_board[i]);
+        staticScene->addItem(bar_board[i]);
     }
+
     print_board();
     //initialize a timer, and connect the on_timer_fired slot with the timeout signal so everytime timeout emit, on_timer_fired will run once
     timer_ = new QTimer(this);
@@ -83,7 +85,7 @@ void MainWindow::print_board() {
         for (int j=0;j<game_board[i].size();j++){
             //for the first turn, put cells on UI
             if(turn_count==0 && !reset_){
-                scene->addItem(game_board[i][j]);
+                boardScene->addItem(game_board[i][j]);
             }
 
             //count the total number of all cells and alived cells

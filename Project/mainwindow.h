@@ -28,9 +28,9 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    QGraphicsScene *scene;
+    QGraphicsScene *boardScene;
 
-    QGraphicsScene *scene2;
+    QGraphicsScene *staticScene;
 
     std::vector<std::vector<Cell*>> game_board;
 
