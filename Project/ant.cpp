@@ -12,9 +12,8 @@
   @param x int x coordinate
   @param y int y coordinate
 */
-Ant::Ant(QColor color, const int id, int x, int y, bool now, bool next) {
+Ant::Ant(QColor color, const int x, const int y, bool now, bool next) {
   this->color_ = color;
-  id_ = id;
   x_ = x;
   y_ = y;
   current_alive_=now;
@@ -64,7 +63,7 @@ void Ant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidg
     painter->setBrush(b);
 }
 
-//pre-set the condition for each cell while initializing the board
+//pre-set the condition for each ant while initializing the board
 int Ant::set_condition(){
     //generate a value either 0 or 1
     int return_value=0;
@@ -94,7 +93,7 @@ void Ant::set_next(bool condition){
 }
 
 void Ant::update_condition(){
-    //if the cell was already alive, add to counter that counts
+    //if the ant was already alive, add to counter that counts
     if(current_alive_&&next_alive_){
         stay_alive_++;
     }
@@ -105,7 +104,7 @@ void Ant::update_condition(){
     next_alive_=false;
     //also update the color
     if(current_alive_){
-        //if the cell has stayed alive for at least 3 turns, change it to orange
+        //if the ant has stayed alive for at least 3 turns, change it to orange
         if(stay_alive_>2){
             color_=QColor(255,128,0);
         }
