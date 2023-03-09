@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "cell.h"
+#include "ant.h"
 #include "bar.h"
 #include "ui_mainwindow.h"
 #include <iostream>
@@ -44,15 +44,15 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << "Game starts";
     QColor color1(255,255,255);
 
-    //creat a 2d vector of cell
+    //creat a 2d vector of ant
     int current_alive=0;
     for(int i=0;i<rows_;i++){
-        game_board.push_back(std::vector<Cell*>()); //insert a row into the board
+        ant_army_decision_board.push_back(std::vector<Ant*>()); //insert a row into the board
         for(int j=0;j<columns_;j++){
-            Cell *p1=new Cell(color1,90+20*j,40+20*i,true,true); //set the new cell with x and y coordinates
-            //for each cell, set it to be either dead or alive
+            Ant *p1=new Ant(color1,90+20*j,40+20*i,true,true); //set the new ant with x and y coordinates
+            //for each ant, set it to be either dead or alive
             current_alive+=p1->set_condition();
-            game_board[i].push_back(p1); //add value to this new-inserted row vertically as column value on the same row
+            ant_army_decision_board[i].push_back(p1); //add value to this new-inserted row vertically as column value on the same row
         }
     }
 
@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     for (int i=0;i<22;i++){
         Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->statisticsView->height(),0);
         bar_board.push_back(p1);
-        staticScene->addItem(bar_board[i]); //addItem() will draw the cell for us on UI, which will finally call Bar::paint()
+        staticScene->addItem(bar_board[i]); //addItem() will draw the ant for us on UI, which will finally call Bar::paint()
     }
 
     //print the intialized board on the screen
@@ -78,26 +78,26 @@ MainWindow::~MainWindow()
 
 //print the current condition of the board every time a turn is ended
 void MainWindow::print_board() {
-    //extra work for counting cells thta has survived for more than 2 turns
-    int cell_alive=0;
+    //extra work for counting ants thta has survived for more than 2 turns
+    int ant_alive=0;
 
     population_=0;
     total_=0;
-    for (int i=0;i<game_board.size();i++){
-        for (int j=0;j<game_board[i].size();j++){
-            //for the first turn, put cells on UI
+    for (int i=0;i<ant_army_decision_board.size();i++){
+        for (int j=0;j<ant_army_decision_board[i].size();j++){
+            //for the first turn, put ants on UI
             if(turn_count==0 && !reset_){
-                boardScene->addItem(game_board[i][j]); //addItem() will draw the cell for us on UI, which will finally call Cell::paint()
+                boardScene->addItem(ant_army_decision_board[i][j]); //addItem() will draw the ant for us on UI, which will finally call Ant::paint()
             }
 
-            //count the total number of all cells and alived cells
+            //count the total number of all ants and alived ants
             total_+=1;
-            if(game_board[i][j]->now_alive()){
+            if(ant_army_decision_board[i][j]->now_alive()){
                 population_+=1;
 
-                //extra work for counting cells thta has survived for more than 2 turns
-                if(game_board[i][j]->get_alive()>2){
-                    cell_alive++;
+                //extra work for counting ants thta has survived for more than 2 turns
+                if(ant_army_decision_board[i][j]->get_alive()>2){
+                    ant_alive++;
                 }
             }
         }
@@ -109,9 +109,9 @@ void MainWindow::print_board() {
     QString text2="Population: "+QString::number(population_)+" ("+QString::number(percentage)+"%)";
     ui->PercentageBar->setText(text2);
 
-    //extra work for counting cells thta has survived for more than 2 turns
-    double percentage_alive=cell_alive*1.0/total_*100.0;
-    QString text3="Alive > 2: "+QString::number(cell_alive)+" ("+QString::number(percentage_alive)+"%)";
+    //extra work for counting ants thta has survived for more than 2 turns
+    double percentage_alive=ant_alive*1.0/total_*100.0;
+    QString text3="Alive > 2: "+QString::number(ant_alive)+" ("+QString::number(percentage_alive)+"%)";
     ui->AliveBar->setText(text3);
 
     //now try to create the bar
@@ -140,37 +140,37 @@ void MainWindow::play_once(){
     //update turn count information
     turn_count++;
     //get the boundary of the board size
-    int x_max=game_board.size()-1;
-    int y_max=game_board[0].size()-1;
-    //loop through the board and update their next condition based on the number of alive neighbors the cell holds
+    int x_max=ant_army_decision_board.size()-1;
+    int y_max=ant_army_decision_board[0].size()-1;
+    //loop through the board and update their next condition based on the number of alive neighbors the ant holds
     for (int i=0;i<=x_max;i++){
         for (int j=0;j<=y_max;j++){
             int alive=check_neighbor(i,j,x_max,y_max);
-            //if the current cell is alive
-            Cell *current_cell=game_board[i][j];
-            if(current_cell->now_alive()){
+            //if the current ant is alive
+            Ant *current_ant=ant_army_decision_board[i][j];
+            if(current_ant->now_alive()){
                 if(alive<2){
-                    //live cell dies
-                    current_cell->set_next(false);
+                    //live ant dies
+                    current_ant->set_next(false);
                 }
                 else if(alive==2||alive==3){
-                    //live cell remains alive
-                    current_cell->set_next(true);
+                    //live ant remains alive
+                    current_ant->set_next(true);
                 }
                 else if(alive>3){
-                    //live cell dies
-                    current_cell->set_next(false);
+                    //live ant dies
+                    current_ant->set_next(false);
                 }
             }
-            //if the current cell is dead
+            //if the current ant is dead
             else{
                 if(alive==3){
-                    //dead cell becomes alive
-                    current_cell->set_next(true);
+                    //dead ant becomes alive
+                    current_ant->set_next(true);
                 }
                 else{
-                    //dead cell is still dead
-                    current_cell->set_next(false);
+                    //dead ant is still dead
+                    current_ant->set_next(false);
                 }
             }
         }
@@ -181,16 +181,16 @@ void MainWindow::play_once(){
 }
 
 void MainWindow::update_board(){
-    for (int i=0;i<game_board.size();i++){
-        for (int j=0;j<game_board[i].size();j++){
-            game_board[i][j]->update_condition();
+    for (int i=0;i<ant_army_decision_board.size();i++){
+        for (int j=0;j<ant_army_decision_board[i].size();j++){
+            ant_army_decision_board[i][j]->update_condition();
         }
     }
 }
 
 //return the value of neighbors that are still alive
 int MainWindow::check_neighbor(int i, int j, int x_max, int y_max){
-    //save the neighbor rows and columns the original cell is going to check
+    //save the neighbor rows and columns the original ant is going to check
     int count=0;
     std::vector<int> rows;
     std::vector<int> columns;
@@ -230,9 +230,9 @@ int MainWindow::check_neighbor(int i, int j, int x_max, int y_max){
         for(int b=0;b<3;b++){
             //if we are not at point (i,j) itself. the same thing as !(if a==i && b==j)
             if(rows[a]!=i||columns[b]!=j){
-                //every member covered in this for loop is a neighbor cell of the original cell
+                //every member covered in this for loop is a neighbor ant of the original ant
                 //count all neighbors alive
-                if(game_board[rows[a]][columns[b]]->now_alive()){
+                if(ant_army_decision_board[rows[a]][columns[b]]->now_alive()){
                     count++;
                 }
             }
@@ -266,10 +266,10 @@ void MainWindow::on_PauseButton_pressed(){
 void MainWindow::on_ResetButton_pressed(){
     qDebug() << "Game restarts";
     //re-initialize the play board
-    for (int i=0;i<game_board.size();i++){
-        for (int j=0;j<game_board[i].size();j++){
-            game_board[i][j]->set_condition();
-            game_board[i][j]->update();
+    for (int i=0;i<ant_army_decision_board.size();i++){
+        for (int j=0;j<ant_army_decision_board[i].size();j++){
+            ant_army_decision_board[i][j]->set_condition();
+            ant_army_decision_board[i][j]->update();
         }
     }
     //re-initialize the bar board
