@@ -26,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     // scene is a QGraphicsScene pointer field of the PlotWindow class
     // this makes our lives easier by letting us easily access it
     // from other functions in this class.
-    boardScene = new QGraphicsScene;
-    board->setScene(boardScene);
+    antDecisionScene = new QGraphicsScene;
+    board->setScene(antDecisionScene);
     // make the scene the same size as the view containing it
     board->setSceneRect(0,0,board->frameSize().width(),board->frameSize().height());
 
@@ -36,6 +36,13 @@ MainWindow::MainWindow(QWidget *parent)
     staticScene = new QGraphicsScene;
     statisticsBoard->setScene(staticScene);
     statisticsBoard->setSceneRect(0,0,statisticsBoard->frameSize().width(),statisticsBoard->frameSize().height());
+
+    // set up view and scene for the map board - STILL WIP
+    QGraphicsView * mapBoard = ui->antArmyView;
+    mapScene = new QGraphicsScene;
+    mapBoard->setScene(mapScene);
+    // make the scene the same size as the view containing it
+    mapBoard->setSceneRect(0,0,mapBoard->frameSize().width(),mapBoard->frameSize().height());
 
     // we'll want to generate random numbers later so we're
     // going to seed our random number generator once
@@ -87,7 +94,7 @@ void MainWindow::print_board() {
         for (int j=0;j<ant_army_decision_board[i].size();j++){
             //for the first turn, put ants on UI
             if(turn_count==0 && !reset_){
-                boardScene->addItem(ant_army_decision_board[i][j]); //addItem() will draw the ant for us on UI, which will finally call Ant::paint()
+                antDecisionScene->addItem(ant_army_decision_board[i][j]); //addItem() will draw the ant for us on UI, which will finally call Ant::paint()
             }
 
             //count the total number of all ants and alived ants

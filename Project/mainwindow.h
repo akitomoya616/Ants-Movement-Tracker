@@ -28,9 +28,11 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    QGraphicsScene *boardScene;
+    QGraphicsScene *antDecisionScene;
 
     QGraphicsScene *staticScene;
+
+    QGraphicsScene *mapScene;
 
     std::vector<std::vector<Ant*>> ant_army_decision_board;
 
