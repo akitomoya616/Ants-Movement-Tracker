@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // the QGraphicsView is the UI element that contains the
     // scene that we will actually get to draw on.
-    QGraphicsView * board = ui->boardView;
+    QGraphicsView * board = ui->antMindView;
 
     // scene is a QGraphicsScene pointer field of the PlotWindow class
     // this makes our lives easier by letting us easily access it
