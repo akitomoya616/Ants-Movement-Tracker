@@ -1,5 +1,5 @@
-#ifndef CELL_H
-#define CELL_H
+#ifndef ANT_H
+#define ANT_H
 
 #include <QColor>
 #include <QGraphicsItem>

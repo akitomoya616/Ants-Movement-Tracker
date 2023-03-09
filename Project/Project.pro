@@ -12,12 +12,14 @@ SOURCES += \
     ant.cpp \
     bar.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    map.cpp
 
 HEADERS += \
     ant.h \
     bar.h \
-    mainwindow.h
+    mainwindow.h \
+    map.h
 
 FORMS += \
     mainwindow.ui
