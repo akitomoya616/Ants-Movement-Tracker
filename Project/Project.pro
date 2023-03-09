@@ -11,15 +11,15 @@ CONFIG += c++17
 SOURCES += \
     ant.cpp \
     bar.cpp \
+    cell.cpp \
     main.cpp \
-    mainwindow.cpp \
-    map.cpp
+    mainwindow.cpp
 
 HEADERS += \
     ant.h \
     bar.h \
-    mainwindow.h \
-    map.h
+    cell.h \
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui

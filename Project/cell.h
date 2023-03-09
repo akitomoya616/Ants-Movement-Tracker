@@ -6,12 +6,12 @@
 #include <math.h>
 
 
-class Map : public QObject, public QGraphicsItem {
+class Cell : public QObject, public QGraphicsItem {
 
     Q_OBJECT
 
 public:
-    Map(QColor color, const int x, const int y, bool now, bool next);  // constructor
+    Cell(QColor color, const int x, const int y, bool now, bool next);  // constructor
 
     int get_x() const { return x_; }  // inline member function
     int get_y() const { return y_; }  // inline member function
@@ -54,7 +54,7 @@ private:
     // if you declare the operator as a friend, then it isn't
     // part of the object
     // friend will let this method access the private fields
-    friend bool operator==(const Map &first, const Map &other);
+    friend bool operator==(const Cell &first, const Cell &other);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

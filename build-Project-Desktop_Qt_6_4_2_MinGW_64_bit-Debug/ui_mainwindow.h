@@ -26,11 +26,11 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QGraphicsView *graphicsView;
+    QGraphicsView *antMindView;
     QPushButton *StepButton;
     QPushButton *PlayButton;
     QPushButton *PauseButton;
-    QGraphicsView *graphicsView_2;
+    QGraphicsView *statisticsView;
     QLabel *TurnBar;
     QLabel *PercentageBar;
     QPushButton *ResetButton;
@@ -39,6 +39,7 @@ public:
     QLabel *Fast;
     QLabel *CurrentSpeed;
     QSlider *horizontalSlider;
+    QGraphicsView *antArmyView;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -46,12 +47,12 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(800, 600);
+        MainWindow->resize(971, 973);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        graphicsView = new QGraphicsView(centralwidget);
-        graphicsView->setObjectName("graphicsView");
-        graphicsView->setGeometry(QRect(90, 70, 600, 311));
+        antMindView = new QGraphicsView(centralwidget);
+        antMindView->setObjectName("antMindView");
+        antMindView->setGeometry(QRect(90, 70, 600, 311));
         StepButton = new QPushButton(centralwidget);
         StepButton->setObjectName("StepButton");
         StepButton->setGeometry(QRect(30, 400, 99, 28));
@@ -61,11 +62,11 @@ public:
         PauseButton = new QPushButton(centralwidget);
         PauseButton->setObjectName("PauseButton");
         PauseButton->setGeometry(QRect(30, 480, 99, 28));
-        graphicsView_2 = new QGraphicsView(centralwidget);
-        graphicsView_2->setObjectName("graphicsView_2");
-        graphicsView_2->setGeometry(QRect(150, 400, 440, 100));
-        graphicsView_2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        graphicsView_2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        statisticsView = new QGraphicsView(centralwidget);
+        statisticsView->setObjectName("statisticsView");
+        statisticsView->setGeometry(QRect(150, 400, 440, 100));
+        statisticsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        statisticsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         TurnBar = new QLabel(centralwidget);
         TurnBar->setObjectName("TurnBar");
         TurnBar->setGeometry(QRect(30, 10, 291, 18));
@@ -91,10 +92,13 @@ public:
         horizontalSlider->setObjectName("horizontalSlider");
         horizontalSlider->setGeometry(QRect(280, 510, 160, 22));
         horizontalSlider->setOrientation(Qt::Horizontal);
+        antArmyView = new QGraphicsView(centralwidget);
+        antArmyView->setObjectName("antArmyView");
+        antArmyView->setGeometry(QRect(90, 550, 600, 311));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 26));
+        menubar->setGeometry(QRect(0, 0, 971, 21));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");

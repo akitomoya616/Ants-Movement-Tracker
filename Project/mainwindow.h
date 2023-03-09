@@ -7,6 +7,7 @@
 #include <QTimer>
 #include "ant.h"
 #include "bar.h"
+#include "cell.h"
 #include <vector>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -37,6 +38,8 @@ private:
     std::vector<std::vector<Ant*>> ant_army_decision_board;
 
     std::vector<Bar*> bar_board;
+
+    std::vector<std::vector<Cell*>> ant_moving_map;
 
     int rows_=10;
 

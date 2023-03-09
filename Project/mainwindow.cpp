@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ant.h"
 #include "bar.h"
+#include "cell.h"
 #include "ui_mainwindow.h"
 #include <iostream>
 #include <QGraphicsScene>
@@ -51,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << "Game starts";
     QColor color1(255,255,255);
 
-    //creat a 2d vector of ant
+    //creat a 2d vector of ants' decision map
     int current_alive=0;
     for(int i=0;i<rows_;i++){
         ant_army_decision_board.push_back(std::vector<Ant*>()); //insert a row into the board
@@ -69,6 +70,10 @@ MainWindow::MainWindow(QWidget *parent)
         bar_board.push_back(p1);
         staticScene->addItem(bar_board[i]); //addItem() will draw the ant for us on UI, which will finally call Bar::paint()
     }
+
+    //for initializing the map
+//    Map map(rows_, columns_);
+
 
     //print the intialized board on the screen
     print_board();

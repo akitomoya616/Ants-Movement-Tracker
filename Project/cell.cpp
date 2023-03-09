@@ -5,14 +5,14 @@
 #include <QtWidgets>
 #include <random>
 #include <math.h>
-#include "map.h"
+#include "cell.h"
 
 /**
   Creates a new Point object with coordinates x and y
   @param x int x coordinate
   @param y int y coordinate
 */
-Map::Map(QColor color, const int x, const int y, bool now, bool next) {
+Cell::Cell(QColor color, const int x, const int y, bool now, bool next) {
   this->color_ = color;
   x_ = x;
   y_ = y;
@@ -20,7 +20,7 @@ Map::Map(QColor color, const int x, const int y, bool now, bool next) {
   next_alive_=next;
 }
 
-void Map::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button()==Qt::LeftButton){
         qDebug() << "left clicked!";
@@ -41,12 +41,12 @@ void Map::mousePressEvent(QGraphicsSceneMouseEvent *event)
     update();
 }
 
-QRectF Map::boundingRect() const
+QRectF Cell::boundingRect() const
 {
     return QRectF(x_, y_, width_, width_);
 }
 
-QPainterPath Map::shape() const
+QPainterPath Cell::shape() const
 {
     QPainterPath path;
     path.addRect(x_, y_, width_, width_);
@@ -54,7 +54,7 @@ QPainterPath Map::shape() const
 }
 
 
-void Map::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
     QBrush b = painter->brush();
@@ -64,7 +64,7 @@ void Map::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidg
 }
 
 //pre-set the condition for each ant while initializing the board
-int Map::set_condition(){
+int Cell::set_condition(){
     //generate a value either 0 or 1
     int return_value=0;
     int random=rand()%2;
@@ -84,15 +84,15 @@ int Map::set_condition(){
     return return_value;
 }
 
-bool Map::now_alive(){
+bool Cell::now_alive(){
     return current_alive_;
 }
 
-void Map::set_next(bool condition){
+void Cell::set_next(bool condition){
     next_alive_=condition;
 }
 
-void Map::update_condition(){
+void Cell::update_condition(){
     //if the ant was already alive, add to counter that counts
     if(current_alive_&&next_alive_){
         stay_alive_++;
@@ -126,6 +126,6 @@ void Map::update_condition(){
   @param first Point left hand side of the expression
   @param other Point right hand side of the expression
 */
-bool operator==(const Map &first, const Map &other) {
+bool operator==(const Cell &first, const Cell &other) {
   return first.x_ == other.x_ && first.y_ == other.y_;
 }
