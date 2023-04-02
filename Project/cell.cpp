@@ -12,34 +12,32 @@
   @param x int x coordinate
   @param y int y coordinate
 */
-Cell::Cell(QColor color, const int x, const int y, bool now, bool next) {
+Cell::Cell(QColor color, const int x, const int y) {
   this->color_ = color;
   x_ = x;
   y_ = y;
-  current_alive_=now;
-  next_alive_=next;
 }
 
-void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if(event->button()==Qt::LeftButton){
-        qDebug() << "left clicked!";
-        if(!current_alive_){
-            qDebug()<<"it was dead but now it should be alive";
-            current_alive_=true;
-            color_=(QColor(0,0,255));
-        }
-    }
-    else if(event->button()==Qt::RightButton){
-        qDebug() << "right clicked!";
-        if(current_alive_){
-            qDebug()<<"it was alive but now it should be dead";
-            current_alive_=false;
-            color_=(QColor(255,255,255));
-        }
-    }
-    update();
-}
+//void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
+//{
+//    if(event->button()==Qt::LeftButton){
+//        qDebug() << "left clicked!";
+//        if(!current_alive_){
+//            qDebug()<<"it was dead but now it should be alive";
+//            current_alive_=true;
+//            color_=(QColor(0,0,255));
+//        }
+//    }
+//    else if(event->button()==Qt::RightButton){
+//        qDebug() << "right clicked!";
+//        if(current_alive_){
+//            qDebug()<<"it was alive but now it should be dead";
+//            current_alive_=false;
+//            color_=(QColor(255,255,255));
+//        }
+//    }
+//    update();
+//}
 
 QRectF Cell::boundingRect() const
 {
@@ -65,55 +63,56 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 //pre-set the condition for each ant while initializing the board
 int Cell::set_condition(){
-    //generate a value either 0 or 1
+    //generate a value either 0, 1, 2, 3, ..., or 9
     int return_value=0;
-    int random=rand()%2;
-    if(random==0){
-        //set to dead
-        current_alive_=false;
-        color_=QColor(255,255,255);
-    }
-    else{
-        //set to alive
-        current_alive_=true;
-        color_=QColor(0,0,255);
+    int random=rand()%10;
+    if(random==0){ // 10% chance of being as an obstacle
+        //set to obstacle
+        current_role_=1;
+        color_=QColor(0,0,0);
         return_value=1;
     }
-    next_alive_=false;
-    stay_alive_=0;
+    else{
+        //set to empty
+        current_role_=0;
+        color_=QColor(255,255,255);
+    }
+    next_role_=0;
     return return_value;
 }
 
-bool Cell::now_alive(){
-    return current_alive_;
+void Cell::set_ant_army(){
+    current_role_ = 3;
+    color_=QColor(255,0,0);
 }
 
-void Cell::set_next(bool condition){
-    next_alive_=condition;
+void Cell::set_food(){
+    current_role_ = 2;
+    color_=QColor(0,255,0);
+}
+
+int Cell::get_role(){
+    return current_role_;
+}
+
+void Cell::set_next(int role){
+    next_role_=role;
 }
 
 void Cell::update_condition(){
-    //if the ant was already alive, add to counter that counts
-    if(current_alive_&&next_alive_){
-        stay_alive_++;
+    current_role_=next_role_;
+    //also update the color based on the updated role
+    if(current_role_ == 0){
+        color_=QColor(255,255,255); // white for empty
+    }
+    else if(current_role_ == 1){
+        color_=QColor(0,0,0); // black for obstacle
+    }
+    else if(current_role_ == 2){
+        color_=QColor(0,255,0); // green for food
     }
     else{
-        stay_alive_=0;
-    }
-    current_alive_=next_alive_;
-    next_alive_=false;
-    //also update the color
-    if(current_alive_){
-        //if the ant has stayed alive for at least 3 turns, change it to orange
-        if(stay_alive_>2){
-            color_=QColor(255,128,0);
-        }
-        else{
-            color_=QColor(0,0,255);
-        }
-    }
-    else{
-        color_=QColor(255,255,255);
+        color_=QColor(255,0,0); // red for ant army
     }
     update();
 }

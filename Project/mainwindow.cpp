@@ -64,16 +64,30 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    //for initializing the bar_board
+    //for initializing the statistics board
     for (int i=0;i<22;i++){
         Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->statisticsView->height(),0);
         bar_board.push_back(p1);
         staticScene->addItem(bar_board[i]); //addItem() will draw the ant for us on UI, which will finally call Bar::paint()
     }
 
-    //for initializing the map
-//    Map map(rows_, columns_);
-
+    //for initializing the ant army's movement map
+    for(int i=0;i<rows_;i++){
+        ant_moving_map.push_back(std::vector<Cell*>()); //insert a row into the army map
+        for(int j=0;j<columns_;j++){
+            Cell *p1=new Cell(color1,90+20*j,40+20*i); //set the new cell (either ant, empty, food, or obstacle with x and y coordinates
+            //for each cell, first set it to be either empty or obstacle cell
+            p1->set_condition();
+            //then update their role to either ant army or food based on their coordinates
+            if(i == ant_army_coordinates[0] && j == ant_army_coordinates[1]){
+                p1->set_ant_army();
+            }
+            else if(i == food_coordinates[0] && j == food_coordinates[1]){
+                p1->set_food();
+            }
+            ant_moving_map[i].push_back(p1); //add value to this new-inserted row vertically as column value on the same row
+        }
+    }
 
     //print the intialized board on the screen
     print_board();
@@ -114,6 +128,17 @@ void MainWindow::print_board() {
             }
         }
     }
+
+    //print ant army map
+    for (int i=0;i<ant_moving_map.size();i++){
+        for (int j=0;j<ant_moving_map[i].size();j++){
+            //for the first turn, put ants on UI
+            if(turn_count==0 && !reset_){
+                mapScene->addItem(ant_moving_map[i][j]); //addItem() will draw the ant for us on UI, which will finally call Ant::paint()
+            }
+        }
+    }
+
     //update turn count and population
     QString text="Turn: "+QString::number(turn_count);
     ui->TurnBar->setText(text);

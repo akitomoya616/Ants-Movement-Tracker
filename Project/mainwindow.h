@@ -35,12 +35,6 @@ private:
 
     QGraphicsScene *mapScene;
 
-    std::vector<std::vector<Ant*>> ant_army_decision_board;
-
-    std::vector<Bar*> bar_board;
-
-    std::vector<std::vector<Cell*>> ant_moving_map;
-
     int rows_=10;
 
     int columns_=20;
@@ -60,6 +54,16 @@ private:
     bool reset_=false;
 
     double ms_=500.0;
+
+    std::vector<std::vector<Ant*>> ant_army_decision_board;
+
+    std::vector<Bar*> bar_board;
+
+    std::vector<std::vector<Cell*>> ant_moving_map;
+
+    // the following line HAS TO BE LOWER than int columns_=20, otherwise it cannot find columns_ value and return 0 for it
+    std::vector<int> ant_army_coordinates = {rows_ - 1, columns_/2 - 1};
+    std::vector<int> food_coordinates = {0, columns_/2 - 1};
 
 private slots:
     void on_StepButton_pressed();

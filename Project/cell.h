@@ -11,7 +11,7 @@ class Cell : public QObject, public QGraphicsItem {
     Q_OBJECT
 
 public:
-    Cell(QColor color, const int x, const int y, bool now, bool next);  // constructor
+    Cell(QColor color, const int x, const int y);  // constructor
 
     int get_x() const { return x_; }  // inline member function
     int get_y() const { return y_; }  // inline member function
@@ -25,13 +25,15 @@ public:
 
     int set_condition();
 
-    bool now_alive();
+    void set_ant_army();
 
-    void set_next(bool condition);
+    void set_food();
+
+    int get_role();
+
+    void set_next(int role);
 
     void update_condition();
-
-    int get_alive(){return stay_alive_;};
 
     std::vector<std::string*> get_possible_direction(){return direction_;};
 
@@ -40,9 +42,8 @@ private:
     int x_;
     int y_;
     QColor color_;
-    bool current_alive_;
-    bool next_alive_;
-    int stay_alive_=0;
+    int current_role_; // 0 for empty, 1 for obstacle, 2 for food, 3 for ant army
+    int next_role_;
 
     std::vector<std::string*> direction_; // set of directions that show where the ant army can go for this turn
     std::vector<int*> ant_army; // coordinates of the location of the current any army
@@ -57,7 +58,7 @@ private:
     friend bool operator==(const Cell &first, const Cell &other);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    // void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 };  // class Point
 
