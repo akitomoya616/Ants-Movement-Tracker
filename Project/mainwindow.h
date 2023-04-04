@@ -24,6 +24,7 @@ public:
     void play_once();
     int check_neighbor(int i, int j, int x_max, int y_max);
     void update_board();
+    bool move_ant_army(int current_x, int current_y);
 
 
 private:

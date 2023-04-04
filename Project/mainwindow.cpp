@@ -238,41 +238,46 @@ void MainWindow::update_board(){
     // for ant army moving map
     int current_x = ant_army_coordinates[0];
     int current_y = ant_army_coordinates[1];
-    qDebug() << "before:";
-    qDebug() << current_x;
-    qDebug() << current_y;
     ant_moving_map[current_x][current_y]->set_empty(); // first set the current ant army's location to empty
 
-    bool moved = false;
-    if(final_direction_ == 0){ // move forward
-        if (current_x - 1 >= 0){
-            ant_army_coordinates[0] -= 1;
-            moved = true;
-        }
-    }
-    else if(final_direction_ == 1){ // move right
-        if (current_y + 1 < columns_){
-            ant_army_coordinates[1] += 1;
-            moved = true;
-        }
-    }
-    else if(final_direction_ == -1){ // move left
-        if (current_y - 1 >= 0){
-            ant_army_coordinates[1] -= 1;
-            moved = true;
-        }
-    }
+    bool moved = move_ant_army(current_x, current_y); // move the ant army and check if the move is successfull or not
 
     if(!moved){
-        qDebug() << "reaching the boundary, ant army didn't move.";
+        qDebug() << "reaching the boundary or runing into obstacle, ant army won't move for this turn.";
     }
 
     int next_x = ant_army_coordinates[0];
     int next_y = ant_army_coordinates[1];
-    qDebug() << "after:";
-    qDebug() << next_x;
-    qDebug() << next_y;
-    ant_moving_map[next_x][next_y]->set_ant_army();
+    ant_moving_map[next_x][next_y]->set_ant_army(); // set the cell that ant army is currently landing at as ant army
+}
+
+bool MainWindow::move_ant_army(int current_x, int current_y){
+    bool moved = false;
+    if(final_direction_ == 0){ // move forward
+        if (current_x - 1 >= 0){ // boundary check
+            if(ant_moving_map[current_x - 1][current_y]->get_role() != 1){ // obstacle check
+                ant_army_coordinates[0] -= 1;
+                moved = true; // STILL NOT FOOD CHECK TO END THE GAME
+            }
+        }
+    }
+    else if(final_direction_ == 1){ // move right
+        if (current_y + 1 < columns_){ // boundary check
+            if(ant_moving_map[current_x][current_y + 1]->get_role() != 1){ // obstacle check
+                ant_army_coordinates[1] += 1;
+                moved = true;
+            }
+        }
+    }
+    else if(final_direction_ == -1){ // move left
+        if (current_y - 1 >= 0){ // boundary check
+            if(ant_moving_map[current_x][current_y - 1]->get_role() != 1){ // obstacle check
+                ant_army_coordinates[1] -= 1;
+                moved = true;
+            }
+        }
+    }
+    return moved;
 }
 
 //return the value of neighbors that are still alive
