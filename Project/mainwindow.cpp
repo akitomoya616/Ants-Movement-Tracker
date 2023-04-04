@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     for (int i=0;i<22;i++){
         Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->statisticsView->height(),0);
         bar_board.push_back(p1);
-        staticScene->addItem(bar_board[i]); //addItem() will draw the ant for us on UI, which will finally call Bar::paint()
+        staticScene->addItem(bar_board[i]); //addItem() will draw the static bar for us on UI, which will finally call Bar::paint()
     }
 
     //for initializing the ant army's movement map
@@ -109,6 +109,7 @@ void MainWindow::print_board() {
 
     population_=0;
     total_=0;
+    //print ant decision map
     for (int i=0;i<ant_army_decision_board.size();i++){
         for (int j=0;j<ant_army_decision_board[i].size();j++){
             //for the first turn, put ants on UI
@@ -134,7 +135,7 @@ void MainWindow::print_board() {
         for (int j=0;j<ant_moving_map[i].size();j++){
             //for the first turn, put ants on UI
             if(turn_count==0 && !reset_){
-                mapScene->addItem(ant_moving_map[i][j]); //addItem() will draw the ant for us on UI, which will finally call Ant::paint()
+                mapScene->addItem(ant_moving_map[i][j]); //addItem() will draw the ant army for us on UI, which will finally call Cell::paint()
             }
         }
     }
@@ -212,8 +213,9 @@ void MainWindow::play_once(){
             }
         }
     }
-    //set the moving direction for the ant army for the next turn
+    //set the moving direction for the ant army for the next turn, WILL BE CHANGED TO DYNAMIC VALUE
     final_direction_ = 0;
+
     //update the board and turn/popluation/alive information after the current turn is over
     update_board();
     print_board();
@@ -233,9 +235,30 @@ void MainWindow::update_board(){
     qDebug() << "before:";
     qDebug() << current_x;
     qDebug() << current_y;
+    ant_moving_map[current_x][current_y]->set_empty(); // first set the current ant army's location to empty
+
+    bool moved = false;
     if(final_direction_ == 0){ // move forward
-        ant_moving_map[current_x][current_y]->set_empty();
-        ant_army_coordinates[0] -= 1;
+        if (current_x - 1 >= 0){
+            ant_army_coordinates[0] -= 1;
+            moved = true;
+        }
+    }
+    else if(final_direction_ == 1){ // move right
+        if (current_y + 1 < columns_){
+            ant_army_coordinates[1] += 1;
+            moved = true;
+        }
+    }
+    else if(final_direction_ == -1){ // move left
+        if (current_y - 1 >= 0){
+            ant_army_coordinates[1] -= 1;
+            moved = true;
+        }
+    }
+
+    if(!moved){
+        qDebug() << "reaching the boundary, ant army didn't move.";
     }
 
     int next_x = ant_army_coordinates[0];
@@ -334,6 +357,25 @@ void MainWindow::on_ResetButton_pressed(){
     for (int i=0;i<22;i++){
         bar_board[i]->update_condition(0+i*20,ui->statisticsView->height(),0);
     }
+
+    //re-locate ant army and food
+    ant_army_coordinates = {rows_ - 1, columns_/2 - 1};
+    food_coordinates = {0, columns_/2 - 1};
+
+    //re-initialize the ant army map board
+    for (int i=0;i<ant_moving_map.size();i++){
+        for (int j=0;j<ant_moving_map[i].size();j++){
+            ant_moving_map[i][j]->set_condition();
+            if(i == ant_army_coordinates[0] && j == ant_army_coordinates[1]){
+                ant_moving_map[i][j]->set_ant_army();
+            }
+            else if(i == food_coordinates[0] && j == food_coordinates[1]){
+                ant_moving_map[i][j]->set_food();
+            }
+            ant_moving_map[i][j]->update();
+        }
+    }
+
     //re-start the counters
     bar_count=0;
     turn_count=0;
