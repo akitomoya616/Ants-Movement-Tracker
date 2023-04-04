@@ -68,7 +68,6 @@ MainWindow::MainWindow(QWidget *parent)
     for (int i=0;i<22;i++){
         Bar *p1=new Bar(QColor(255,255,255),0+i*20,ui->statisticsView->height(),0);
         bar_board.push_back(p1);
-        staticScene->addItem(bar_board[i]); //addItem() will draw the static bar for us on UI, which will finally call Bar::paint()
     }
 
     //for initializing the ant army's movement map
@@ -171,6 +170,13 @@ void MainWindow::print_board() {
         bar_board[bar_count]->update_condition(0+bar_count*20,total_height-actual_height,actual_height);
     }
     bar_count++;
+
+    //print static bar map
+    for (int i=0;i<bar_board.size();i++){
+        if(turn_count==0 && !reset_){
+            staticScene->addItem(bar_board[i]); //addItem() will draw the static bar for us on UI, which will finally call Bar::paint()
+        }
+    }
 }
 
 //the detailed process for playing each turn
@@ -356,6 +362,7 @@ void MainWindow::on_ResetButton_pressed(){
     //re-initialize the bar board
     for (int i=0;i<22;i++){
         bar_board[i]->update_condition(0+i*20,ui->statisticsView->height(),0);
+        bar_board[i]->update();
     }
 
     //re-locate ant army and food
