@@ -29,6 +29,8 @@ public:
 
     void set_food();
 
+    void set_empty();
+
     int get_role();
 
     void set_next(int role);

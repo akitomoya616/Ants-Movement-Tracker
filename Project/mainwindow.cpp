@@ -212,17 +212,38 @@ void MainWindow::play_once(){
             }
         }
     }
+    //set the moving direction for the ant army for the next turn
+    final_direction_ = 0;
     //update the board and turn/popluation/alive information after the current turn is over
     update_board();
     print_board();
 }
 
 void MainWindow::update_board(){
+    // for ant army decision map
     for (int i=0;i<ant_army_decision_board.size();i++){
         for (int j=0;j<ant_army_decision_board[i].size();j++){
             ant_army_decision_board[i][j]->update_condition();
         }
     }
+
+    // for ant army moving map
+    int current_x = ant_army_coordinates[0];
+    int current_y = ant_army_coordinates[1];
+    qDebug() << "before:";
+    qDebug() << current_x;
+    qDebug() << current_y;
+    if(final_direction_ == 0){ // move forward
+        ant_moving_map[current_x][current_y]->set_empty();
+        ant_army_coordinates[0] -= 1;
+    }
+
+    int next_x = ant_army_coordinates[0];
+    int next_y = ant_army_coordinates[1];
+    qDebug() << "after:";
+    qDebug() << next_x;
+    qDebug() << next_y;
+    ant_moving_map[next_x][next_y]->set_ant_army();
 }
 
 //return the value of neighbors that are still alive

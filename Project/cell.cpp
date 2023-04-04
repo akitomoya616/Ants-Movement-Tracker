@@ -84,11 +84,19 @@ int Cell::set_condition(){
 void Cell::set_ant_army(){
     current_role_ = 3;
     color_=QColor(255,0,0);
+    update();
 }
 
 void Cell::set_food(){
     current_role_ = 2;
     color_=QColor(0,255,0);
+    update();
+}
+
+void Cell::set_empty(){
+    current_role_ = 0;
+    color_=QColor(255,255,255);
+    update();
 }
 
 int Cell::get_role(){
