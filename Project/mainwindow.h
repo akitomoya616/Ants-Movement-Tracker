@@ -8,6 +8,7 @@
 #include "ant.h"
 #include "bar.h"
 #include "cell.h"
+#include "qpushbutton.h"
 #include <vector>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,7 +27,7 @@ public:
     void update_board();
     bool move_ant_army(int current_x, int current_y);
     bool check_army_forward();
-
+    void end_game();
 
 private:
     Ui::MainWindow *ui;
@@ -36,6 +37,10 @@ private:
     QGraphicsScene *staticScene;
 
     QGraphicsScene *mapScene;
+
+    QPushButton * step_button;
+    QPushButton * play_button;
+    QPushButton * pause_button;
 
     int rows_=10;
 

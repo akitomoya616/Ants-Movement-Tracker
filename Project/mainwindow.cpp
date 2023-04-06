@@ -45,6 +45,11 @@ MainWindow::MainWindow(QWidget *parent)
     // make the scene the same size as the view containing it
     mapBoard->setSceneRect(0,0,mapBoard->frameSize().width(),mapBoard->frameSize().height());
 
+    // assign buttons to later modification on clickable/unclickable
+    step_button = ui->StepButton;
+    play_button = ui->PlayButton;
+    pause_button = ui->PauseButton;
+
     // we'll want to generate random numbers later so we're
     // going to seed our random number generator once
     srand(static_cast<unsigned>(QTime::currentTime().msec()));
@@ -143,12 +148,12 @@ void MainWindow::print_board() {
     QString text="Turn: "+QString::number(turn_count);
     ui->TurnBar->setText(text);
     double percentage=population_*1.0/total_*100.0;
-    QString text2="Population: "+QString::number(population_)+" ("+QString::number(percentage)+"%)";
+    QString text2="Decision on Right: "+QString::number(population_)+" ("+QString::number(percentage)+"%)";
     ui->PercentageBar->setText(text2);
 
     //extra work for counting ants thta has survived for more than 2 turns
     double percentage_alive=ant_alive*1.0/total_*100.0;
-    QString text3="Alive > 2: "+QString::number(ant_alive)+" ("+QString::number(percentage_alive)+"%)";
+    QString text3="Right > 2: "+QString::number(ant_alive)+" ("+QString::number(percentage_alive)+"%)";
     ui->AliveBar->setText(text3);
 
     //now try to create the bar
@@ -176,6 +181,11 @@ void MainWindow::print_board() {
         if(turn_count==0 && !reset_){
             staticScene->addItem(bar_board[i]); //addItem() will draw the static bar for us on UI, which will finally call Bar::paint()
         }
+    }
+
+    //disable all buttons except reset button when ant army reaches the food
+    if (ant_army_coordinates[0] == food_coordinates[0] && ant_army_coordinates[1] == food_coordinates[1]){
+        end_game();
     }
 }
 
@@ -367,6 +377,17 @@ int MainWindow::check_neighbor(int i, int j, int x_max, int y_max){
     return count;
 }
 
+//set all buttons except the reset one as unclickable buttons
+void MainWindow::end_game(){
+    step_button->setEnabled(false);
+    play_button->setEnabled(false);
+    pause_button->setEnabled(false);
+
+    // set timer to stop so even autp play will be paused
+    timer_->stop();
+    pause_=true;
+}
+
 //once the step button has been pressed, run one turn
 void MainWindow::on_StepButton_pressed(){
     play_once();
@@ -426,7 +447,17 @@ void MainWindow::on_ResetButton_pressed(){
     bar_count=0;
     turn_count=0;
     reset_=true;
+
+    //pause the timer so it will auto run the game only by pressing play button again
+    timer_->stop();
+    pause_=true;
+
     print_board();
+
+    //re-able other buttons
+    step_button->setEnabled(true);
+    play_button->setEnabled(true);
+    pause_button->setEnabled(true);
 }
 
 //adjust the playing speed

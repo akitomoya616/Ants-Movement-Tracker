@@ -102,7 +102,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Population: </string>
+     <string>Decision on Right:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ResetButton">
@@ -128,7 +128,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Alive &gt; 2:</string>
+     <string>Right &gt; 2:</string>
     </property>
    </widget>
    <widget class="QLabel" name="Slow">
