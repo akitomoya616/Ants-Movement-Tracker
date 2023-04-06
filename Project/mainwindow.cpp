@@ -186,41 +186,54 @@ void MainWindow::play_once(){
     //get the boundary of the board size
     int x_max=ant_army_decision_board.size()-1;
     int y_max=ant_army_decision_board[0].size()-1;
-    //loop through the board and update their next condition based on the number of alive neighbors the ant holds
-    for (int i=0;i<=x_max;i++){
-        for (int j=0;j<=y_max;j++){
-            int alive=check_neighbor(i,j,x_max,y_max);
-            //if the current ant is alive
-            Ant *current_ant=ant_army_decision_board[i][j];
-            if(current_ant->now_alive()){
-                if(alive<2){
-                    //live ant dies
-                    current_ant->set_next(false);
+
+    // first check if the ant army can move forward without running into any obstacle
+    bool straight_forward = check_army_forward();
+
+    // if no obstacle ahead, no need to make group decision and just move the ant army forward
+    if(straight_forward){
+        qDebug()<<"no need to generate group decision, moving forward";
+        final_direction_ = 0;
+    }
+
+    // otherwise do group decision using te any_army_deision_board to genereate the moving direction
+    else{
+        //loop through the board and update their next condition based on the number of alive neighbors the ant holds
+        for (int i=0;i<=x_max;i++){
+            for (int j=0;j<=y_max;j++){
+                int alive=check_neighbor(i,j,x_max,y_max);
+                //if the current ant is alive
+                Ant *current_ant=ant_army_decision_board[i][j];
+                if(current_ant->now_alive()){
+                    if(alive<2){
+                        //live ant dies
+                        current_ant->set_next(false);
+                    }
+                    else if(alive==2||alive==3){
+                        //live ant remains alive
+                        current_ant->set_next(true);
+                    }
+                    else if(alive>3){
+                        //live ant dies
+                        current_ant->set_next(false);
+                    }
                 }
-                else if(alive==2||alive==3){
-                    //live ant remains alive
-                    current_ant->set_next(true);
-                }
-                else if(alive>3){
-                    //live ant dies
-                    current_ant->set_next(false);
-                }
-            }
-            //if the current ant is dead
-            else{
-                if(alive==3){
-                    //dead ant becomes alive
-                    current_ant->set_next(true);
-                }
+                //if the current ant is dead
                 else{
-                    //dead ant is still dead
-                    current_ant->set_next(false);
+                    if(alive==3){
+                        //dead ant becomes alive
+                        current_ant->set_next(true);
+                    }
+                    else{
+                        //dead ant is still dead
+                        current_ant->set_next(false);
+                    }
                 }
             }
         }
+        //set the moving direction for the ant army for the next turn, WILL BE CHANGED TO DYNAMIC VALUE
+        final_direction_ = 1;
     }
-    //set the moving direction for the ant army for the next turn, WILL BE CHANGED TO DYNAMIC VALUE
-    final_direction_ = 0;
 
     //update the board and turn/popluation/alive information after the current turn is over
     update_board();
@@ -251,8 +264,21 @@ void MainWindow::update_board(){
     ant_moving_map[next_x][next_y]->set_ant_army(); // set the cell that ant army is currently landing at as ant army
 }
 
+bool MainWindow::check_army_forward(){
+    bool straight_forward = false;
+    int current_x = ant_army_coordinates[0];
+    int current_y = ant_army_coordinates[1];
+    if(current_x != 0){ // if not at the top of the board, which means moving forward still doable
+        if (ant_moving_map[current_x - 1][current_y]->get_role() != 1){ // if not reaching top row and the cell above is not obstacle
+            straight_forward = true;
+        }
+    }
+    return straight_forward;
+}
+
 bool MainWindow::move_ant_army(int current_x, int current_y){
     bool moved = false;
+
     if(final_direction_ == 0){ // move forward
         if (current_x - 1 >= 0){ // boundary check
             if(ant_moving_map[current_x - 1][current_y]->get_role() != 1){ // obstacle check
