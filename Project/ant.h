@@ -25,22 +25,24 @@ public:
 
     int set_condition();
 
-    bool now_alive();
+    int now_decision();
 
-    void set_next(bool condition);
+    void set_next(int condition); // 0 for false, 1 for right, 2 for no decision
 
     void update_condition();
 
-    int get_alive(){return stay_alive_;};
+    void set_no_decision();
+
+    int get_right(){return stay_right_;};
 
 
 private:
   int x_;
   int y_;
   QColor color_;
-  bool current_alive_;
-  bool next_alive_;
-  int stay_alive_=0;
+  int current_decision_;
+  int next_decision_;
+  int stay_right_=0;
 
 
   // all our ant will be 20 wide and tall

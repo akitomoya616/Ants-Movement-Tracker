@@ -16,25 +16,25 @@ Ant::Ant(QColor color, const int x, const int y, bool now, bool next) {
   this->color_ = color;
   x_ = x;
   y_ = y;
-  current_alive_=now;
-  next_alive_=next;
+  current_decision_=now;
+  next_decision_=next;
 }
 
 void Ant::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button()==Qt::LeftButton){
         qDebug() << "left clicked!";
-        if(!current_alive_){
-            qDebug()<<"it was dead but now it should be alive";
-            current_alive_=true;
+        if(current_decision_ == 0){
+            qDebug()<<"it was left but now it should be right";
+            current_decision_=1;
             color_=(QColor(0,0,255));
         }
     }
     else if(event->button()==Qt::RightButton){
         qDebug() << "right clicked!";
-        if(current_alive_){
-            qDebug()<<"it was alive but now it should be dead";
-            current_alive_=false;
+        if(current_decision_ == 1){
+            qDebug()<<"it was right but now it should be left";
+            current_decision_=0;
             color_=(QColor(255,255,255));
         }
     }
@@ -69,51 +69,54 @@ int Ant::set_condition(){
     int return_value=0;
     int random=rand()%2;
     if(random==0){
-        //set to dead
-        current_alive_=false;
+        //set to left
+        current_decision_=0;
         color_=QColor(255,255,255);
     }
     else{
-        //set to alive
-        current_alive_=true;
+        //set to right
+        current_decision_=1;
         color_=QColor(0,0,255);
         return_value=1;
     }
-    next_alive_=false;
-    stay_alive_=0;
+    next_decision_=0;
+    stay_right_=0;
     return return_value;
 }
 
-bool Ant::now_alive(){
-    return current_alive_;
+int Ant::now_decision(){
+    return current_decision_;
 }
 
-void Ant::set_next(bool condition){
-    next_alive_=condition;
+void Ant::set_next(int condition){
+    next_decision_=condition;
 }
 
 void Ant::update_condition(){
     //if the ant was already alive, add to counter that counts
-    if(current_alive_&&next_alive_){
-        stay_alive_++;
+    if(current_decision_&&next_decision_){
+        stay_right_++;
     }
     else{
-        stay_alive_=0;
+        stay_right_=0;
     }
-    current_alive_=next_alive_;
-    next_alive_=false;
+    current_decision_=next_decision_;
+    next_decision_=0;
     //also update the color
-    if(current_alive_){
-        //if the ant has stayed alive for at least 3 turns, change it to orange
-        if(stay_alive_>2){
+    if(current_decision_ == 1){
+        //if the ant has stayed right for at least 3 turns, change it to orange
+        if(stay_right_>2){
             color_=QColor(255,128,0);
         }
         else{
             color_=QColor(0,0,255);
         }
     }
-    else{
+    else if(current_decision_ == 0){ //update to white if choose to go left
         color_=QColor(255,255,255);
+    }
+    else{
+        color_=QColor(0,255,0); //update to green if no decision needed and they are just moving forward
     }
     update();
 }

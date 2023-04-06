@@ -118,11 +118,11 @@ void MainWindow::print_board() {
 
             //count the total number of all ants and alived ants
             total_+=1;
-            if(ant_army_decision_board[i][j]->now_alive()){
+            if(ant_army_decision_board[i][j]->now_decision()){
                 population_+=1;
 
                 //extra work for counting ants thta has survived for more than 2 turns
-                if(ant_army_decision_board[i][j]->get_alive()>2){
+                if(ant_army_decision_board[i][j]->get_right()>2){
                     ant_alive++;
                 }
             }
@@ -194,6 +194,13 @@ void MainWindow::play_once(){
     if(straight_forward){
         qDebug()<<"no need to generate group decision, moving forward";
         final_direction_ = 0;
+        // set all ant decision to orange, marking that they are not making specific direction for this turn
+        for (int i=0;i<=x_max;i++){
+            for (int j=0;j<=y_max;j++){
+                Ant *current_ant=ant_army_decision_board[i][j];
+                current_ant->set_next(2);
+            }
+        }
     }
 
     // otherwise do group decision using te any_army_deision_board to genereate the moving direction
@@ -204,29 +211,29 @@ void MainWindow::play_once(){
                 int alive=check_neighbor(i,j,x_max,y_max);
                 //if the current ant is alive
                 Ant *current_ant=ant_army_decision_board[i][j];
-                if(current_ant->now_alive()){
+                if(current_ant->now_decision()){
                     if(alive<2){
                         //live ant dies
-                        current_ant->set_next(false);
+                        current_ant->set_next(0);
                     }
                     else if(alive==2||alive==3){
                         //live ant remains alive
-                        current_ant->set_next(true);
+                        current_ant->set_next(1);
                     }
                     else if(alive>3){
                         //live ant dies
-                        current_ant->set_next(false);
+                        current_ant->set_next(0);
                     }
                 }
                 //if the current ant is dead
                 else{
                     if(alive==3){
                         //dead ant becomes alive
-                        current_ant->set_next(true);
+                        current_ant->set_next(1);
                     }
                     else{
                         //dead ant is still dead
-                        current_ant->set_next(false);
+                        current_ant->set_next(0);
                     }
                 }
             }
@@ -350,7 +357,7 @@ int MainWindow::check_neighbor(int i, int j, int x_max, int y_max){
             if(rows[a]!=i||columns[b]!=j){
                 //every member covered in this for loop is a neighbor ant of the original ant
                 //count all neighbors alive
-                if(ant_army_decision_board[rows[a]][columns[b]]->now_alive()){
+                if(ant_army_decision_board[rows[a]][columns[b]]->now_decision()){
                     count++;
                 }
             }
