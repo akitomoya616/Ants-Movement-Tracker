@@ -18,26 +18,26 @@ Cell::Cell(QColor color, const int x, const int y) {
   y_ = y;
 }
 
-//void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
-//{
-//    if(event->button()==Qt::LeftButton){
-//        qDebug() << "left clicked!";
-//        if(!current_alive_){
-//            qDebug()<<"it was dead but now it should be alive";
-//            current_alive_=true;
-//            color_=(QColor(0,0,255));
-//        }
-//    }
-//    else if(event->button()==Qt::RightButton){
-//        qDebug() << "right clicked!";
-//        if(current_alive_){
-//            qDebug()<<"it was alive but now it should be dead";
-//            current_alive_=false;
-//            color_=(QColor(255,255,255));
-//        }
-//    }
-//    update();
-//}
+void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(event->button()==Qt::LeftButton){
+        qDebug() << "left clicked!";
+        if(current_role_ == 0){
+            qDebug()<<"it was empty but now it should be obstacle";
+            current_role_=1;
+            color_=(QColor(0,0,0));
+        }
+    }
+    else if(event->button()==Qt::RightButton){
+        qDebug() << "right clicked!";
+        if(current_role_ == 1){
+            qDebug()<<"it was obstacle but now it should be empty";
+            current_role_=0;
+            color_=(QColor(255,255,255));
+        }
+    }
+    update();
+}
 
 QRectF Cell::boundingRect() const
 {

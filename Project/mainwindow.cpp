@@ -205,6 +205,7 @@ void MainWindow::play_once(){
 
     // otherwise do group decision using te any_army_deision_board to genereate the moving direction
     else{
+        qDebug()<<"cannot move forward directly, start generating gorup decision";
         //loop through the board and update their next condition based on the number of alive neighbors the ant holds
         for (int i=0;i<=x_max;i++){
             for (int j=0;j<=y_max;j++){

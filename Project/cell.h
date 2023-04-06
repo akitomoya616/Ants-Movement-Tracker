@@ -60,7 +60,7 @@ private:
     friend bool operator==(const Cell &first, const Cell &other);
 
 protected:
-    // void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 };  // class Point
 
