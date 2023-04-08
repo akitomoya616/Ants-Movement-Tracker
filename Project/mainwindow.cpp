@@ -45,6 +45,55 @@ MainWindow::MainWindow(QWidget *parent)
     // make the scene the same size as the view containing it
     mapBoard->setSceneRect(0,0,mapBoard->frameSize().width(),mapBoard->frameSize().height());
 
+    // set demo block view for user to understand
+    QGraphicsView * demoView = ui->demoView;
+    demoScene = new QGraphicsScene;
+    demoView->setScene(demoScene);
+    demoView->setSceneRect(0,0,demoView->frameSize().width(),demoView->frameSize().height());
+    QColor red(255,0,0);
+    QColor green(0,255,0);
+    QColor blue(0,0,255);
+    QColor yellow(255,255,0);
+    QColor orange(255,165,0);
+    QColor black(0,0,0);
+    QColor white(255,255,255);
+
+    Cell *green_icon=new Cell(green, 90, 32);
+    Cell *orange_icon=new Cell(orange, 90, 62);
+    Cell *blue_icon=new Cell(blue, 90, 92);
+
+    Cell *white_icon=new Cell(white, 90, 152);
+    Cell *black_icon=new Cell(black, 90, 182);
+    Cell *red_icon=new Cell(red, 90, 212);
+    Cell *yellow_icon=new Cell(yellow, 90, 242);
+
+    demoScene->addItem(green_icon);
+    demoScene->addItem(orange_icon);
+    demoScene->addItem(blue_icon);
+    demoScene->addItem(white_icon);
+    demoScene->addItem(black_icon);
+    demoScene->addItem(red_icon);
+    demoScene->addItem(yellow_icon);
+
+    QGraphicsTextItem *text1 = demoScene->addText("For Group Decision Table:");
+    text1->setPos(0, 0);
+    QGraphicsTextItem *text2 = demoScene->addText("No Decision");
+    text2->setPos(0, 30);
+    QGraphicsTextItem *text3 = demoScene->addText("Left");
+    text3->setPos(0, 60);
+    QGraphicsTextItem *text4 = demoScene->addText("Right");
+    text4->setPos(0, 90);
+    QGraphicsTextItem *text5 = demoScene->addText("For Ant Army Map:");
+    text5->setPos(0, 120);
+    QGraphicsTextItem *text6 = demoScene->addText("Empty");
+    text6->setPos(0, 150);
+    QGraphicsTextItem *text7 = demoScene->addText("Obstacle");
+    text7->setPos(0, 180);
+    QGraphicsTextItem *text8 = demoScene->addText("Ant Army");
+    text8->setPos(0, 210);
+    QGraphicsTextItem *text9 = demoScene->addText("Food");
+    text9->setPos(0, 240);
+
     // assign buttons to later modification on clickable/unclickable
     step_button = ui->StepButton;
     play_button = ui->PlayButton;
@@ -148,7 +197,8 @@ void MainWindow::print_board() {
     QString text="Turn: "+QString::number(turn_count);
     ui->TurnBar->setText(text);
     double percentage=population_*1.0/total_*100.0;
-    QString text2="Decision on Right: "+QString::number(population_)+" ("+QString::number(percentage)+"%)";
+    QString text2="Left vs. Right: " + QString::number(total_ - population_) + " : " +
+            QString::number(population_);
     ui->PercentageBar->setText(text2);
 
     //extra work for counting ants thta has survived for more than 2 turns

@@ -89,7 +89,7 @@ void Cell::set_ant_army(){
 
 void Cell::set_food(){
     current_role_ = 2;
-    color_=QColor(0,255,0);
+    color_=QColor(255,255,0);
     update();
 }
 

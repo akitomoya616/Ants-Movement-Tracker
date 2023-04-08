@@ -38,6 +38,8 @@ private:
 
     QGraphicsScene *mapScene;
 
+    QGraphicsScene *demoScene;
+
     QPushButton * step_button;
     QPushButton * play_button;
     QPushButton * pause_button;

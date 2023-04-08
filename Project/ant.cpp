@@ -35,7 +35,7 @@ void Ant::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if(current_decision_ == 1){
             qDebug()<<"it was right but now it should be left";
             current_decision_=0;
-            color_=(QColor(255,255,255));
+            color_=(QColor(255,165,0));
         }
     }
     update();
@@ -71,7 +71,7 @@ int Ant::set_condition(){
     if(random==0){
         //set to left
         current_decision_=0;
-        color_=QColor(255,255,255);
+        color_=QColor(255,165,0);
     }
     else{
         //set to right
@@ -113,7 +113,7 @@ void Ant::update_condition(){
         }
     }
     else if(current_decision_ == 0){ //update to white if choose to go left
-        color_=QColor(255,255,255);
+        color_=QColor(255,165,0);
     }
     else{
         color_=QColor(0,255,0); //update to green if no decision needed and they are just moving forward
