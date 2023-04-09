@@ -108,7 +108,7 @@ void Ant::set_next(int condition){
 
 void Ant::update_condition(){
     //if the ant was already alive, add to counter that counts
-    if(current_decision_&&next_decision_){
+    if(current_decision_ == 1 && next_decision_ == 1){
         stay_right_++;
     }
     else{
@@ -118,11 +118,11 @@ void Ant::update_condition(){
     next_decision_=2;
     //also update the color
     if(current_decision_ == 1){
-        //if the ant has stayed right for at least 3 turns, change it to dark orange
+        //if the ant has stayed right for at least 3 turns, change it to black
         if(stay_right_>2){
-            color_=QColor(255,128,0);
+            color_=QColor(0,0,0);
         }
-        else{
+        else{ // blue for right
             color_=QColor(0,0,255);
         }
     }

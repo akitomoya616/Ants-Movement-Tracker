@@ -173,14 +173,13 @@ void MainWindow::print_board() {
             total_+=1;
             if(ant_army_decision_board[i][j]->now_decision() == 0){
                 nx += 1;
-
+            }
+            else if(ant_army_decision_board[i][j]->now_decision() == 1){
+                ny += 1;
                 //extra work for counting ants thta has survived for more than 2 turns
                 if(ant_army_decision_board[i][j]->get_right()>2){
                     ant_alive++;
                 }
-            }
-            else if(ant_army_decision_board[i][j]->now_decision() == 1){
-                ny += 1;
             }
         }
     }
@@ -368,7 +367,7 @@ bool MainWindow::move_ant_army(int current_x, int current_y){
     return moved;
 }
 
-//return the value of neighbors that are still alive
+//return the probability that the current ant will turn left
 double MainWindow::generate_probability(int tx, int ty){
     //save the neighbor rows and columns the original ant is going to check
     double decay_x = exp(-pow(tx, 2) / (pow(lm, 2)));
@@ -377,8 +376,8 @@ double MainWindow::generate_probability(int tx, int ty){
     double dy = 1 + a * powf(s, -(ny * decay_y - k * nx));
     double px = 1 / (1 + (dx / dy));
     double px_in_percentage = px * 100;
-    qDebug()<<"current px_in_percentage: ";
-    qDebug()<<px_in_percentage;
+//    qDebug()<<"current px_in_percentage: ";
+//    qDebug()<<px_in_percentage;
     return px_in_percentage;
 }
 
