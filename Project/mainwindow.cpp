@@ -158,7 +158,8 @@ void MainWindow::print_board() {
     //extra work for counting ants thta has survived for more than 2 turns
     int ant_alive=0;
 
-    population_=0;
+    nx = 0;
+    ny = 0;
     total_=0;
     //print ant decision map
     for (int i=0;i<ant_army_decision_board.size();i++){
@@ -168,15 +169,18 @@ void MainWindow::print_board() {
                 antDecisionScene->addItem(ant_army_decision_board[i][j]); //addItem() will draw the ant for us on UI, which will finally call Ant::paint()
             }
 
-            //count the total number of all ants and alived ants
+            //count the total number of all ants and ants go either left or right
             total_+=1;
-            if(ant_army_decision_board[i][j]->now_decision()){
-                population_+=1;
+            if(ant_army_decision_board[i][j]->now_decision() == 0){
+                nx += 1;
 
                 //extra work for counting ants thta has survived for more than 2 turns
                 if(ant_army_decision_board[i][j]->get_right()>2){
                     ant_alive++;
                 }
+            }
+            else if(ant_army_decision_board[i][j]->now_decision() == 1){
+                ny += 1;
             }
         }
     }
@@ -194,9 +198,9 @@ void MainWindow::print_board() {
     //update turn count and population
     QString text="Turn: "+QString::number(turn_count);
     ui->TurnBar->setText(text);
-    double percentage=population_*1.0/total_*100.0;
-    QString text2="Left vs. Right: " + QString::number(total_ - population_) + " : " +
-            QString::number(population_);
+    double percentage=nx*1.0/total_*100.0;
+    QString text2="Left vs. Right: " + QString::number(nx) + " : " +
+            QString::number(total_ - nx);
     ui->PercentageBar->setText(text2);
 
     //extra work for counting ants thta has survived for more than 2 turns
@@ -251,54 +255,46 @@ void MainWindow::play_once(){
     // if no obstacle ahead, no need to make group decision and just move the ant army forward
     if(straight_forward){
         qDebug()<<"no need to generate group decision, moving forward";
-        final_direction_ = 0;
+        final_direction_ = 0; // set next army movement forward
         // set all ant decision to orange, marking that they are not making specific direction for this turn
         for (int i=0;i<=x_max;i++){
             for (int j=0;j<=y_max;j++){
                 Ant *current_ant=ant_army_decision_board[i][j];
-                current_ant->set_next(2);
+                current_ant->set_next(2); // it will set tx and ty value back to 0
             }
         }
     }
 
     // otherwise do group decision using te any_army_deision_board to genereate the moving direction
     else{
+        int left_after_this_turn = 0;
+        int right_after_this_turn = 0;
         qDebug()<<"cannot move forward directly, start generating gorup decision";
-        //loop through the board and update their next condition based on the number of alive neighbors the ant holds
+        //loop through the board and update their next condition based on the equation of decision for individual ant
         for (int i=0;i<=x_max;i++){
             for (int j=0;j<=y_max;j++){
                 Ant *current_ant=ant_army_decision_board[i][j];
-                int alive=check_neighbor(i,j,x_max,y_max);
-                //if the current ant is alive
-                if(current_ant->now_decision()){
-                    if(alive<2){
-                        //live ant dies
-                        current_ant->set_next(0);
-                    }
-                    else if(alive==2||alive==3){
-                        //live ant remains alive
-                        current_ant->set_next(1);
-                    }
-                    else if(alive>3){
-                        //live ant dies
-                        current_ant->set_next(0);
-                    }
+                double p_left=generate_probability(current_ant->get_tx(), current_ant->get_ty());
+                //decide to go left or right
+                int random=rand()%100 + 1;
+                if(p_left<=random){
+                    //set its next move to left and update its tx, ty value
+                    current_ant->set_next(0);
+                    left_after_this_turn += 1;
                 }
-                //if the current ant is dead
                 else{
-                    if(alive==3){
-                        //dead ant becomes alive
-                        current_ant->set_next(1);
-                    }
-                    else{
-                        //dead ant is still dead
-                        current_ant->set_next(0);
-                    }
+                    //set its next move to right and update its tx, ty value
+                    current_ant->set_next(1);
+                    right_after_this_turn += 1;
                 }
             }
         }
-        //set the moving direction for the ant army for the next turn, WILL BE CHANGED TO DYNAMIC VALUE
-        final_direction_ = 1;
+        if(left_after_this_turn < right_after_this_turn){ // ant army go right
+            final_direction_ = 1;
+        }
+        else{ // ant army go left
+            final_direction_ = -1;
+        }
     }
 
     //update the board and turn/popluation/alive information after the current turn is over
@@ -373,56 +369,17 @@ bool MainWindow::move_ant_army(int current_x, int current_y){
 }
 
 //return the value of neighbors that are still alive
-int MainWindow::check_neighbor(int i, int j, int x_max, int y_max){
+double MainWindow::generate_probability(int tx, int ty){
     //save the neighbor rows and columns the original ant is going to check
-    int count=0;
-    std::vector<int> rows;
-    std::vector<int> columns;
-    rows.push_back(i);
-    columns.push_back(j);
-    if(i==0){
-        //upper bound
-        rows.push_back(x_max);
-        rows.push_back(i+1);
-    }
-    else if(i==x_max){
-        //lower bound
-        rows.push_back(i-1);
-        rows.push_back(0);
-    }
-    else{
-        //general situation
-        rows.push_back(i-1);
-        rows.push_back(i+1);
-    }
-    if(j==0){
-        //left side
-        columns.push_back(y_max);
-        columns.push_back(j+1);
-    }
-    else if(j==y_max){
-        //right side
-        columns.push_back(j-1);
-        columns.push_back(0);
-    }
-    else{
-        //general situation
-        columns.push_back(j-1);
-        columns.push_back(j+1);
-    }
-    for(int a=0;a<3;a++){
-        for(int b=0;b<3;b++){
-            //if we are not at point (i,j) itself. the same thing as !(if a==i && b==j)
-            if(rows[a]!=i||columns[b]!=j){
-                //every member covered in this for loop is a neighbor ant of the original ant
-                //count all neighbors alive
-                if(ant_army_decision_board[rows[a]][columns[b]]->now_decision()){
-                    count++;
-                }
-            }
-        }
-    }
-    return count;
+    double decay_x = exp(-pow(tx, 2) / (pow(lm, 2)));
+    double decay_y = exp(-pow(ty, 2) / (pow(lm, 2)));
+    double dx = 1 + a * powf(s, -(nx * decay_x - k * ny));
+    double dy = 1 + a * powf(s, -(ny * decay_y - k * nx));
+    double px = 1 / (1 + (dx / dy));
+    double px_in_percentage = px * 100;
+    qDebug()<<"current px_in_percentage: ";
+    qDebug()<<px_in_percentage;
+    return px_in_percentage;
 }
 
 //set all buttons except the reset one as unclickable buttons

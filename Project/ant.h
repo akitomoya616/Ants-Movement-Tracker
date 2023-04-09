@@ -35,6 +35,10 @@ public:
 
     int get_right(){return stay_right_;};
 
+    int get_tx(){return tx;};
+
+    int get_ty(){return ty;};
+
 
 private:
   int x_;
@@ -43,6 +47,8 @@ private:
   int current_decision_;
   int next_decision_;
   int stay_right_=0;
+  int tx=0; // number of times the current ant has decided to go left in a row
+  int ty=0; // number of times the current ant has decided to go right in a row
 
 
   // all our ant will be 20 wide and tall

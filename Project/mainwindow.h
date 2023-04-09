@@ -23,7 +23,7 @@ public:
     ~MainWindow();
     void print_board();
     void play_once();
-    int check_neighbor(int i, int j, int x_max, int y_max);
+    double generate_probability(int tx, int ty);
     void update_board();
     bool move_ant_army(int current_x, int current_y);
     bool check_army_forward();
@@ -76,6 +76,14 @@ private:
 
     // the direction the army will move for the current turn
     int final_direction_; // 0 for forward, -1 for left, 1 for right
+
+    // parameters for calculating the possibility of maing direction
+    int nx; // number of inidivduals already chosen option x, for x means left in this game
+    int ny; // number of inidivduals already chosen option y, for x means right in this game
+    const double a = 2.5; // strength of nonsocial information
+    const double s = 1.07; // strength of social information from others
+    const double k = 0.53; // relative impacts of opposite options
+    const int lm = 10; // preference decaying paramter
 
 private slots:
     void on_StepButton_pressed();
