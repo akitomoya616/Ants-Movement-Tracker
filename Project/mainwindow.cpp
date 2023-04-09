@@ -106,13 +106,12 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << "Game starts";
 
     //creat a 2d vector of ants' decision map
-    int current_alive=0;
     for(int i=0;i<rows_;i++){
         ant_army_decision_board.push_back(std::vector<Ant*>()); //insert a row into the board
         for(int j=0;j<columns_;j++){
             Ant *p1=new Ant(white,90+20*j,40+20*i,true,true); //set the new ant with x and y coordinates
-            //for each ant, set it to be either dead or alive
-            current_alive+=p1->set_condition();
+            //for each ant's initial decision, set it to be either left or right
+            p1->set_condition();
             ant_army_decision_board[i].push_back(p1); //add value to this new-inserted row vertically as column value on the same row
         }
     }
@@ -268,9 +267,9 @@ void MainWindow::play_once(){
         //loop through the board and update their next condition based on the number of alive neighbors the ant holds
         for (int i=0;i<=x_max;i++){
             for (int j=0;j<=y_max;j++){
+                Ant *current_ant=ant_army_decision_board[i][j];
                 int alive=check_neighbor(i,j,x_max,y_max);
                 //if the current ant is alive
-                Ant *current_ant=ant_army_decision_board[i][j];
                 if(current_ant->now_decision()){
                     if(alive<2){
                         //live ant dies

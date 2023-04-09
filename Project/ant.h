@@ -27,7 +27,7 @@ public:
 
     int now_decision();
 
-    void set_next(int condition); // 0 for false, 1 for right, 2 for no decision
+    void set_next(int condition); // 0 for left, 1 for right, 2 for no decision
 
     void update_condition();
 

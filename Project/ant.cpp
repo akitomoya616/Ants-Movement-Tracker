@@ -69,12 +69,12 @@ int Ant::set_condition(){
     int return_value=0;
     int random=rand()%2;
     if(random==0){
-        //set to left
+        //set to left, orange
         current_decision_=0;
         color_=QColor(255,165,0);
     }
     else{
-        //set to right
+        //set to right, blue
         current_decision_=1;
         color_=QColor(0,0,255);
         return_value=1;
@@ -101,7 +101,7 @@ void Ant::update_condition(){
         stay_right_=0;
     }
     current_decision_=next_decision_;
-    next_decision_=0;
+    next_decision_=2;
     //also update the color
     if(current_decision_ == 1){
         //if the ant has stayed right for at least 3 turns, change it to dark orange
@@ -112,7 +112,7 @@ void Ant::update_condition(){
             color_=QColor(0,0,255);
         }
     }
-    else if(current_decision_ == 0){ //update to white if choose to go left
+    else if(current_decision_ == 0){ //update to orange if choose to go left
         color_=QColor(255,165,0);
     }
     else{
