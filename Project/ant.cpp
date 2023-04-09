@@ -104,7 +104,7 @@ void Ant::update_condition(){
     next_decision_=0;
     //also update the color
     if(current_decision_ == 1){
-        //if the ant has stayed right for at least 3 turns, change it to orange
+        //if the ant has stayed right for at least 3 turns, change it to dark orange
         if(stay_right_>2){
             color_=QColor(255,128,0);
         }

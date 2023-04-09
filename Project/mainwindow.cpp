@@ -104,14 +104,13 @@ MainWindow::MainWindow(QWidget *parent)
     srand(static_cast<unsigned>(QTime::currentTime().msec()));
 
     qDebug() << "Game starts";
-    QColor color1(255,255,255);
 
     //creat a 2d vector of ants' decision map
     int current_alive=0;
     for(int i=0;i<rows_;i++){
         ant_army_decision_board.push_back(std::vector<Ant*>()); //insert a row into the board
         for(int j=0;j<columns_;j++){
-            Ant *p1=new Ant(color1,90+20*j,40+20*i,true,true); //set the new ant with x and y coordinates
+            Ant *p1=new Ant(white,90+20*j,40+20*i,true,true); //set the new ant with x and y coordinates
             //for each ant, set it to be either dead or alive
             current_alive+=p1->set_condition();
             ant_army_decision_board[i].push_back(p1); //add value to this new-inserted row vertically as column value on the same row
@@ -128,7 +127,7 @@ MainWindow::MainWindow(QWidget *parent)
     for(int i=0;i<rows_;i++){
         ant_moving_map.push_back(std::vector<Cell*>()); //insert a row into the army map
         for(int j=0;j<columns_;j++){
-            Cell *p1=new Cell(color1,90+20*j,40+20*i); //set the new cell (either ant, empty, food, or obstacle with x and y coordinates
+            Cell *p1=new Cell(white,90+20*j,40+20*i); //set the new cell (either ant, empty, food, or obstacle with x and y coordinates
             //for each cell, first set it to be either empty or obstacle cell
             p1->set_condition();
             //then update their role to either ant army or food based on their coordinates
