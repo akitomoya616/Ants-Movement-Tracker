@@ -288,11 +288,21 @@ void MainWindow::play_once(){
                 }
             }
         }
-        if(left_after_this_turn < right_after_this_turn){ // ant army go right
+        qDebug()<<"end of current turn";
+        nx = left_after_this_turn;
+        ny = right_after_this_turn;
+        if(nx < ny){ // ant army go right
             final_direction_ = 1;
         }
         else{ // ant army go left
             final_direction_ = -1;
+        }
+        // Loop through the whole ants again and update their actual decision at the end of this turn
+        for (int i=0;i<=x_max;i++){
+            for (int j=0;j<=y_max;j++){
+                Ant *current_ant=ant_army_decision_board[i][j];
+                current_ant->set_tx_ty(final_direction_);
+            }
         }
     }
 
@@ -376,8 +386,16 @@ double MainWindow::generate_probability(int tx, int ty){
     double dy = 1 + a * powf(s, -(ny * decay_y - k * nx));
     double px = 1 / (1 + (dx / dy));
     double px_in_percentage = px * 100;
-//    qDebug()<<"current px_in_percentage: ";
-//    qDebug()<<px_in_percentage;
+    qDebug()<<"current nx: ";
+    qDebug()<<nx;
+    qDebug()<<"current ny: ";
+    qDebug()<<ny;
+    qDebug()<<"current tx: ";
+    qDebug()<<tx;
+    qDebug()<<"current ty: ";
+    qDebug()<<ty;
+    qDebug()<<"current px_in_percentage: ";
+    qDebug()<<px_in_percentage;
     return px_in_percentage;
 }
 

@@ -44,9 +44,9 @@ private:
     QPushButton * play_button;
     QPushButton * pause_button;
 
-    int rows_=10;
+    int rows_=5;
 
-    int columns_=20;
+    int columns_=5;
 
     int turn_count=0;
 

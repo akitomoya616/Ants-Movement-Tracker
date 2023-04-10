@@ -71,13 +71,13 @@ int Ant::set_condition(){
     if(random==0){
         //set to left, orange
         current_decision_=0;
-        tx = 1;
+        //tx = 1;
         color_=QColor(255,165,0);
     }
     else{
         //set to right, blue
         current_decision_=1;
-        ty = 1;
+        //ty = 1;
         color_=QColor(0,0,255);
         return_value=1;
     }
@@ -92,7 +92,10 @@ int Ant::now_decision(){
 
 void Ant::set_next(int condition){
     next_decision_=condition;
-    if(condition == 0){ // go left
+}
+
+void Ant::set_tx_ty(int condition){ // based on final_decision: 1 for right, -1 for left, 0 for forward
+    if(condition == -1){ // go left
         ty = 0; // reset counter for going right in a row back to 0
         tx++;
     }

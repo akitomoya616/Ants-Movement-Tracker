@@ -39,6 +39,8 @@ public:
 
     int get_ty(){return ty;};
 
+    void set_tx_ty(int condition);
+
 
 private:
   int x_;
