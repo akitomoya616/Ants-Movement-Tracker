@@ -48,6 +48,10 @@ private:
 
     int columns_=5;
 
+    int map_rows_=10;
+
+    int map_columns_=20;
+
     int turn_count=0;
 
     int bar_count=0;
@@ -71,8 +75,8 @@ private:
     std::vector<std::vector<Cell*>> ant_moving_map;
 
     // the following 2 lines HAS TO BE LOWER than int columns_=20, otherwise it cannot find columns_ value and return 0 for it
-    std::vector<int> ant_army_coordinates = {rows_ - 1, columns_/2 - 1};
-    std::vector<int> food_coordinates = {0, columns_/2 - 1};
+    std::vector<int> ant_army_coordinates = {map_rows_ - 1, map_columns_/2 - 1};
+    std::vector<int> food_coordinates = {0, map_columns_/2 - 1};
 
     // the direction the army will move for the current turn
     int final_direction_; // 0 for forward, -1 for left, 1 for right

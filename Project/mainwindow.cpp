@@ -123,9 +123,9 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     //for initializing the ant army's movement map
-    for(int i=0;i<rows_;i++){
+    for(int i=0;i<map_rows_;i++){
         ant_moving_map.push_back(std::vector<Cell*>()); //insert a row into the army map
-        for(int j=0;j<columns_;j++){
+        for(int j=0;j<map_columns_;j++){
             Cell *p1=new Cell(white,90+20*j,40+20*i); //set the new cell (either ant, empty, food, or obstacle with x and y coordinates
             //for each cell, first set it to be either empty or obstacle cell
             p1->set_condition();
@@ -354,12 +354,12 @@ bool MainWindow::move_ant_army(int current_x, int current_y){
         if (current_x - 1 >= 0){ // boundary check
             if(ant_moving_map[current_x - 1][current_y]->get_role() != 1){ // obstacle check
                 ant_army_coordinates[0] -= 1;
-                moved = true; // STILL NOT FOOD CHECK TO END THE GAME
+                moved = true;
             }
         }
     }
     else if(final_direction_ == 1){ // move right
-        if (current_y + 1 < columns_){ // boundary check
+        if (current_y + 1 < map_columns_){ // boundary check
             if(ant_moving_map[current_x][current_y + 1]->get_role() != 1){ // obstacle check
                 ant_army_coordinates[1] += 1;
                 moved = true;
@@ -448,8 +448,8 @@ void MainWindow::on_ResetButton_pressed(){
     }
 
     //re-locate ant army and food
-    ant_army_coordinates = {rows_ - 1, columns_/2 - 1};
-    food_coordinates = {0, columns_/2 - 1};
+    ant_army_coordinates = {map_rows_ - 1, map_columns_/2 - 1};
+    food_coordinates = {0, map_columns_/2 - 1};
 
     //re-initialize the ant army map board
     for (int i=0;i<ant_moving_map.size();i++){
