@@ -66,17 +66,20 @@ int Cell::set_condition(){
     //generate a value either 0, 1, 2, 3, ..., or 9
     int return_value=0;
     int random=rand()%10;
-    if(random==0){ // 10% chance of being as an obstacle
-        //set to obstacle
-        current_role_=1;
-        color_=QColor(0,0,0);
-        return_value=1;
-    }
-    else{
-        //set to empty
-        current_role_=0;
-        color_=QColor(255,255,255);
-    }
+//    if(random==0){ // 10% chance of being as an obstacle
+//        //set to obstacle
+//        current_role_=1;
+//        color_=QColor(0,0,0);
+//        return_value=1;
+//    }
+//    else{
+//        //set to empty
+//        current_role_=0;
+//        color_=QColor(255,255,255);
+//    }
+    // for now, set all cells to empty
+    current_role_=0;
+    color_=QColor(255,255,255);
     next_role_=0;
     return return_value;
 }
