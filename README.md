@@ -9,7 +9,7 @@ Created by ***Sitong Lu*** ([visualization tool](https://github.com/akitomoya616
 
 # Installation Instrcution
 1. Install Qt by following this instruction [here](https://web.stanford.edu/dept/cs_edu/resources/qt/install-windows).
-2. Once the project is pulled, delete `Project.pro.user` file and run `Project.pro` file to start the simulation.
+2. Once the project is pulled, delete `Project.pro.user` file and run `Project.pro` file under [Project directory](https://github.com/akitomoya616/CSCI-5423-Project/tree/main/Project) to start the simulation.
 
 # Demonstration & Report
  - **Demo slides** for the demonstration can be found [here](https://github.com/akitomoya616/CSCI-5423-Project/blob/main/CSCI%205423%20Project%20Presentation.pptx).
