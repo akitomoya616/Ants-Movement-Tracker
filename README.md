@@ -1,5 +1,5 @@
 # Investigating Ants’ Sharp Turn During Collective Transport Using Simulation
-CSCI 5423's final project for the Spring 2023 semester.
+Final project for CSCI 5423 (Bio-inspired Multi-Agent System) for the Spring 2023 semester.
 
 Created by ***Sitong Lu*** ([visualization tool](https://github.com/akitomoya616/CSCI-5423-Project/tree/main/Project)) & ***Jooseok Lee*** ([data simulation](https://github.com/akitomoya616/CSCI-5423-Project/blob/main/Rule%20formulation.ipynb)).
 
